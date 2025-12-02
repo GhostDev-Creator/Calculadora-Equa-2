@@ -1,5 +1,7 @@
 let canvas = null;
 let ctx = null;
+let lastParams = { a: 0, b: 0, c: 0, roots: [] };
+let resizeTimeout = null;
 
 function initGraph() {
     canvas = document.getElementById('graph');
@@ -8,20 +10,38 @@ function initGraph() {
         return false;
     }
     ctx = canvas.getContext('2d');
-    canvas.width = canvas.offsetWidth;
-    canvas.height = 400;
+    resizeCanvas();
     console.log('✅ Canvas inicializado:', canvas.width, 'x', canvas.height);
     return true;
 }
 
+function resizeCanvas() {
+    if (!canvas) return;
+    
+    const params = { ...lastParams };
+    
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * window.devicePixelRatio;
+    canvas.height = 400 * window.devicePixelRatio;
+    
+    const scale = window.devicePixelRatio;
+    ctx.scale(scale, scale);
+    
+    if (params.a !== undefined) {
+        drawGraph(params.a, params.b, params.c, params.roots);
+    }
+}
+
 function drawGraph(a, b, c, roots) {
-    if (!ctx) {
+    if (!ctx || !canvas) {
         console.error('❌ Contexto do canvas não inicializado!');
         return;
     }
 
-    const width = canvas.width;
-    const height = canvas.height;
+    lastParams = { a, b, c, roots };
+
+    const width = canvas.width / window.devicePixelRatio;
+    const height = canvas.height / window.devicePixelRatio;
     
     ctx.clearRect(0, 0, width, height);
 
@@ -29,13 +49,13 @@ function drawGraph(a, b, c, roots) {
     const centerY = height / 2;
     const scaleX = width / 24;
     const scaleY = height / 24;
+    
     const gradient = ctx.createLinearGradient(0, 0, 0, height);
     gradient.addColorStop(0, '#424242');
     gradient.addColorStop(1, '#333333');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, width, height);
 
-    // Grade
     ctx.strokeStyle = 'rgba(255,255,255,0.1)';
     ctx.lineWidth = 1;
     ctx.beginPath();
@@ -78,7 +98,7 @@ function drawGraph(a, b, c, roots) {
     ctx.beginPath();
     const step = 0.1;
     let firstPoint = true;
-    
+
     for (let x = -12; x <= 12; x += step) {
         const y = a * x * x + b * x + c;
         const px = centerX + x * scaleX;
@@ -104,7 +124,7 @@ function drawGraph(a, b, c, roots) {
     ctx.shadowBlur = 0;
 
     if (roots && roots.length > 0 && roots.every(r => typeof r === 'number')) {
-        roots.forEach((root, index) => {
+        roots.forEach((root) => {
             const px = centerX + root * scaleX;
             const py = centerY;
 
@@ -204,8 +224,15 @@ function calcularBhaskara() {
         resultadoDiv.innerHTML += `<p class="error">⚠️ Raízes complexas (sem pontos reais)</p>`;
     }
 
-    console.log('📊 Desenhando gráfico com raízes:', roots);
-    drawGraph(a, b, c, roots);
+    setTimeout(() => {
+        console.log('📊 Desenhando gráfico com raízes:', roots);
+        drawGraph(a, b, c, roots);
+    }, 100);
+}
+
+function debounceResize() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(resizeCanvas, 250);
 }
 
 window.addEventListener('load', function() {
@@ -215,9 +242,4 @@ window.addEventListener('load', function() {
     }
 });
 
-window.addEventListener('resize', function() {
-    if (canvas && ctx) {
-        canvas.width = canvas.offsetWidth;
-        canvas.height = 400;
-    }
-});
+window.addEventListener('resize', debounceResize);
