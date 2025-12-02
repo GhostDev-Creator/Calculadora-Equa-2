@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Calculadora de Bhaskara</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <div class="two-column-layout">
+
+        <div class="calculadora-app">
+            <header>
+                <h1>Calculadora de Equação de Segundo Grau</h1>
+                <p>Resolva ax<sup>2</sup> + bx + c = 0</p>
+            </header>
+
+            <main>
+                <div class="formula-info">
+                    <p>Usamos a fórmula de Bhaskara:</p>
+                    <p>Insira os valores de <strong>a</strong>, <strong>b</strong> e <strong>c</strong> da sua equação:</p>
+                </div>
+
+                <div class="input-section">
+                    <div class="input-group">
+                        <label for="inputA">a (Coeficiente de x²):</label>
+                        <input type="number" id="inputA" placeholder="Ex: 1" />
+                        <span class="input-desc">Define a curvatura da parábola.</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="inputB">b (Coeficiente de x):</label>
+                        <input type="number" id="inputB" placeholder="Ex: -5" />
+                        <span class="input-desc">Define a inclinação/posição inicial.</span>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="inputC">c (Termo Constante):</label>
+                        <input type="number" id="inputC" placeholder="Ex: 6" />
+                        <span class="input-desc">Onde o gráfico cruza o eixo Y.</span>
+                    </div>
+                </div>
+
+                <button onclick="calcularBhaskara()">CALCULAR RAÍZES</button>
+            </main>
+        </div>
+
+        <div class="detalhes-calculo">
+            <div id="como-calculado" class="calculation-breakdown">
+                <h3>Passo a Passo: Como o Cálculo é Feito</h3>
+                <p>O processo será detalhado aqui, passo a passo.</p>
+            </div>
+
+            <div id="resultado" class="resultado-section">
+                <h3>Resultado Final:</h3>
+                <p>Aguardando o cálculo...</p>
+            </div>
+
+            <canvas id="graph" width="100%"" height="400"></canvas>
+        </div>
+    </div>
+
+    <footer class="app-footer">
+        <p>Desenvolvido por: João Guilherme, Laura Lopes</p>
+        <p>&copy; 2025</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html
