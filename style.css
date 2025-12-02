@@ -194,3 +194,14 @@ button:hover {
     display: block;
     margin-top: 20px;
 }
+
+@media (max-width: 768px) {
+    .two-column-layout {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .calculadora-app, .detalhes-calculo {
+        min-width: auto;
+        width: 100%;
+    }
+}
